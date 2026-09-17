@@ -47,7 +47,7 @@ I also tried to keep the React optimizations intentional rather than adding useM
 ## With another hour or two
 
 I'd spend the additional time mostly on the frontend side:
-* Stacking Columns (Mobile Card-Style Layout) For mobile device so that we don’t have to scroll horizontally  for table contents
+
 * Improve the table UX a bit further, especially column sizing, sticky headers and making the table work well on smaller screens.
 * Add URL-based state for search, filters, sorting and pagination so that the current view can be refreshed or shared through a URL.
 * Add a few Playwright end-to-end tests covering the main user flow — search, filtering, sorting, opening the detail drawer, and updating seats.
@@ -55,6 +55,7 @@ I'd spend the additional time mostly on the frontend side:
 * Add optimistic UI for the seats update, along with a proper success/error feedback state.
 * Spend some time on accessibility testing with keyboard navigation and screen-reader behavior, especially around the drawer and table interactions.
 * Review the bundle and rendering behavior and remove any unnecessary client-side code or dependencies.
+* Stacking Columns (Mobile Card-Style Layout) For mobile device so that we don’t have to scroll horizontally  for table contents
 
 
 
