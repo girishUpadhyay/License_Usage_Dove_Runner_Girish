@@ -10,12 +10,14 @@ import TableCell from "@mui/material/TableCell";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
 import type { LicenseRecord } from "@/features/licenses/types";
 import type { SortDirection, SortKey } from "@/features/licenses/utils/license-filters";
 import { LicenseTableRow } from "./LicenseTableRow";
+import { LicenseCard } from "./LicenseCard";
 import { TableStatusMessage } from "./TableStatusMessage";
 
-/** Column order as rendered in the header. */
+
 const LICENSE_TABLE_COLUMNS: { key: SortKey; label: string }[] = [
   { key: "customerName", label: "Customer" },
   { key: "plan", label: "Plan" },
@@ -24,11 +26,7 @@ const LICENSE_TABLE_COLUMNS: { key: SortKey; label: string }[] = [
   { key: "renewalDate", label: "Renewal date" },
 ];
 
-/**
- * Discriminated union so the table can render the right body content while
- * keeping the header mounted throughout (avoids layout shift when swapping
- * between loading / error / empty / ready).
- */
+
 export type LicenseTableStatus =
   | { kind: "loading" }
   | { kind: "error"; message: string; onRetry: () => void }
@@ -75,46 +73,78 @@ function SkeletonRows() {
   );
 }
 
+function SkeletonCards() {
+  return (
+    <>
+      {Array.from({ length: SKELETON_ROW_COUNT }).map((_, index) => (
+        <Box key={index} sx={{ p: 2, borderBottom: "1px solid", borderColor: "divider" }}>
+          <Stack direction="row" spacing={1.25} sx={{ alignItems: "center", mb: 1.5 }}>
+            <Skeleton variant="circular" width={32} height={32} />
+            <Skeleton variant="text" width="50%" />
+          </Stack>
+          <Stack direction="row" spacing={1.5}>
+            <Skeleton variant="text" width="30%" />
+            <Skeleton variant="text" width="30%" />
+          </Stack>
+        </Box>
+      ))}
+    </>
+  );
+}
+
 function LicenseTableImpl({ status, sortKey, sortDirection, onSort, onRowSelect }: LicenseTableProps) {
   const licenses = status.kind === "ready" ? status.licenses : [];
 
   return (
-    <TableContainer>
-      <Table stickyHeader aria-rowcount={status.kind === "ready" ? licenses.length + 1 : undefined}>
-        <TableHead>
-          <TableRow>
-            {LICENSE_TABLE_COLUMNS.map((column) => (
-              <TableCell key={column.key} sortDirection={column.key === sortKey ? sortDirection : false}>
-                <TableSortLabel
-                  active={column.key === sortKey}
-                  direction={column.key === sortKey ? sortDirection : "asc"}
-                  onClick={() => onSort(column.key)}
-                >
-                  {column.label}
-                </TableSortLabel>
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-
-        <TableBody>
-          {status.kind === "loading" && <SkeletonRows />}
-
-          {(status.kind === "error" || status.kind === "empty") && (
+    <>
+      <TableContainer sx={{ display: { xs: "none", sm: "block" } }}>
+        <Table stickyHeader aria-rowcount={status.kind === "ready" ? licenses.length + 1 : undefined}>
+          <TableHead>
             <TableRow>
-              <TableCell colSpan={LICENSE_TABLE_COLUMNS.length} sx={{ p: 0, border: 0 }}>
-                <TableStatusMessage {...status} />
-              </TableCell>
+              {LICENSE_TABLE_COLUMNS.map((column) => (
+                <TableCell key={column.key} sortDirection={column.key === sortKey ? sortDirection : false}>
+                  <TableSortLabel
+                    active={column.key === sortKey}
+                    direction={column.key === sortKey ? sortDirection : "asc"}
+                    onClick={() => onSort(column.key)}
+                  >
+                    {column.label}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
             </TableRow>
-          )}
+          </TableHead>
 
-          {status.kind === "ready" &&
-            licenses.map((license) => (
-              <LicenseTableRow key={license.id} license={license} onSelect={onRowSelect} />
-            ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          <TableBody>
+            {status.kind === "loading" && <SkeletonRows />}
+
+            {(status.kind === "error" || status.kind === "empty") && (
+              <TableRow>
+                <TableCell colSpan={LICENSE_TABLE_COLUMNS.length} sx={{ p: 0, border: 0 }}>
+                  <TableStatusMessage {...status} />
+                </TableCell>
+              </TableRow>
+            )}
+
+            {status.kind === "ready" &&
+              licenses.map((license) => (
+                <LicenseTableRow key={license.id} license={license} onSelect={onRowSelect} />
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Box sx={{ display: { xs: "block", sm: "none" } }}>
+        {status.kind === "loading" && <SkeletonCards />}
+
+        {(status.kind === "error" || status.kind === "empty") && <TableStatusMessage {...status} />}
+
+        {status.kind === "ready" &&
+          licenses.map((license) => (
+            <LicenseCard key={license.id} license={license} onSelect={onRowSelect} />
+          ))}
+      </Box>
+    </>
   );
 }
 
