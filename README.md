@@ -33,13 +33,13 @@ npm run test:watch
 
 ## What I prioritized
 
-Given the 2–3 hour scope, I focused mainly on getting all the required functionality working properly instead of spending too much time on visual polish.
+ I focused mainly on getting all the required functionality working properly instead of spending too much time on visual polish.
 
 I used a Route Handler with SWR for the data flow rather than importing the mock data directly into the page. I also kept the types shared between the API response and the client so that the data contract is clear.
 
 I covered the main edge cases mentioned in the assignment, including loading, error and empty states, no results after searching/filtering, and validation when updating seats. I also added an error simulation option so the error state can actually be tested with the local mock API.
 
-I spent some time on accessibility as well. The table supports keyboard interaction, the rows can be opened using the keyboard, and the detail drawer handles focus when it opens and closes.
+I spent some time on accessibility as well.
 
 I also tried to keep the React optimizations intentional rather than adding useMemo and useCallback everywhere. While working on the table, I found an issue where an object being recreated on every render was preventing the table memoization from being useful, so I fixed that as part of the implementation.
 
