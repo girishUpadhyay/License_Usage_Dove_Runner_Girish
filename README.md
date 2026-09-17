@@ -55,7 +55,7 @@ I'd spend the additional time mostly on the frontend side:
 * Add optimistic UI for the seats update, along with a proper success/error feedback state.
 * Spend some time on accessibility testing with keyboard navigation and screen-reader behavior, especially around the drawer and table interactions.
 * Review the bundle and rendering behavior and remove any unnecessary client-side code or dependencies.
-* Stacking Columns (Mobile Card-Style Layout) For mobile device so that we don’t have to scroll horizontally  for table contents
+* Stacking Columns (Mobile Card-Style Layout) For mobile device so that we don’t have to scroll horizontally  for table contents. Instead of table we may show stacking columns for mobile device.
 
 
 
