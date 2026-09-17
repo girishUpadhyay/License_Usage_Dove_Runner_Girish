@@ -16,8 +16,8 @@ Open [http://localhost:3000](http://localhost:3000). Data is seeded from an in-m
 Other scripts:
 
 ```bash
-npm run build   # build
-npm run start   # run the application
+npm run build   # productionbuild
+npm run start   # run the production build
 npm run lint    # eslint
 npm test        # run the test suite once
 npm run test:watch
